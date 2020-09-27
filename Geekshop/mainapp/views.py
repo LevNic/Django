@@ -5,33 +5,29 @@ from datetime import datetime
 
 from django.shortcuts import render
 from geekshop.settings import BASE_DIR
-from mainapp.models import Product
+from mainapp.models import Product, ProductCategory
 
 # Create your views here.
-links_menu = [
-    {'href': 'products_all', 'name': 'все'},
-    {'href': 'products_home', 'name': 'дом'},
-    {'href': 'products_office', 'name': 'офис'},
-    {'href': 'products_modern', 'name': 'модерн'},
-    {'href': 'products_classic', 'name': 'классика'},
-]
 
 
 def main(request):
+    ''' Главная страница '''
     title = 'главная'
 
-    products = Product.objects.all()
+    products_list = Product.objects.all()[:3]
 
     content = {
         'title': title,
-        'products': products
+        'products': products_list
     }
 
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request):
-
+def products(request, category_pk=None):
+    '''Страница продукты'''
+    print(category_pk)
+    links_menu = ProductCategory.objects.all()
     content = {
         'links_menu': links_menu
     }
@@ -39,6 +35,7 @@ def products(request):
 
 
 def contacts(request):
+    '''Страница контакты'''
     title = 'о нас'
     visit_date = datetime.now()
     location = None
