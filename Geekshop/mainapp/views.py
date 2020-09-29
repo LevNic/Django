@@ -4,8 +4,9 @@ import json
 from datetime import datetime
 
 from django.shortcuts import render
-from geekshop.settings import BASE_DIR
 from mainapp.models import Product, ProductCategory
+from geekshop.settings import BASE_DIR
+
 
 # Create your views here.
 
@@ -39,7 +40,7 @@ def contacts(request):
     title = 'о нас'
     visit_date = datetime.now()
     location = None
-    with open(os.path.join(BASE_DIR, 'json/contacts.json')) as f:
+    with open(os.path.join(BASE_DIR, 'mainapp/json/contact__locations.json')) as f:
         location = json.load(f)
     content = {'title': title, 'visit_date': visit_date, 'location': location}
     return render(request, 'mainapp/contact.html', content)
