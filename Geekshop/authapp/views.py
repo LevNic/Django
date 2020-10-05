@@ -12,7 +12,9 @@ def login(request):
     login_form = ShopUserLoginForm(data=request.POST)
     if request.method == 'POST' and login_form.is_valid():
         username = request.POST.get('username')
+        print('USERNAME', username)
         password = request.POST.get('password')
+        print('PASSWORD:', password)
 
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:

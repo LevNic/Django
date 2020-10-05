@@ -35,7 +35,17 @@
         </li>
         {% endif %}
 
-
 </ul>
+<li>
+
+        <a href="{% url 'basket:basket' %}" class="basket"> {% if request.resolver_match.url_name == 'basket' %}
+                class="active"
+                {% endif %}>
+
+                {% if basket %}
+                {{ basket|length }}
+                {% endif %}
+
+        </a>
+</li>
 <a href="#" class="search"></a>
-<a href="#" class="basket"></a>

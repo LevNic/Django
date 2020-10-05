@@ -15,7 +15,7 @@ def load_from_json(file_name):
     '''Загрузка данных из json-файла'''
     file_path = os.path.join(
         settings.BASE_DIR, 'mainapp/json/') + file_name + '.json'
-    with open(file_path) as f_json:
+    with open(file_path, 'r', encoding='utf-8') as f_json:
         return json.load(f_json)
 
 

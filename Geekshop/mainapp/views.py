@@ -3,8 +3,9 @@ import json
 
 from datetime import datetime
 
-from django.shortcuts import render
+from django.shortcuts import render, get_list_or_404
 from mainapp.models import Product, ProductCategory
+from basketapp.models import Basket
 from geekshop.settings import BASE_DIR
 
 
@@ -25,12 +26,35 @@ def main(request):
     return render(request, 'mainapp/index.html', content)
 
 
-def products(request, category_pk=None):
+def products(request, pk=None):
     '''Страница продукты'''
-    print(category_pk)
+
+    title = 'продукты'
     links_menu = ProductCategory.objects.all()
+    basket = Basket.objects.filter(user=request.user)
+
+    if pk is not None:
+        if pk == 0:
+            products_list = Product.objects.all()
+            category = {'name': 'все'}
+        else:
+            category = get_list_or_404(ProductCategory, pk=pk)
+            products_list = Product.objects.filter(
+                category__pk=pk).order_by('-price')
+        content = {
+            'title': title,
+            'links_menu': links_menu,
+            'category': category,
+            'products': products_list,
+            'basket': basket
+        }
+        return render(request, 'mainapp/products_list.html', content)
+    same_products = Product.objects.all()[3:5]
     content = {
-        'links_menu': links_menu
+        'title': title,
+        'links_menu': links_menu,
+        'same_products': same_products,
+        'basket': basket
     }
     return render(request, 'mainapp/products.html', content)
 
