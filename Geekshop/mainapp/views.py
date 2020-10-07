@@ -1,9 +1,10 @@
 import os
 import json
+import random
 
 from datetime import datetime
 
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import render, get_list_or_404, get_object_or_404
 from mainapp.models import Product, ProductCategory
 from basketapp.models import Basket
 from geekshop.settings import BASE_DIR
@@ -20,10 +21,31 @@ def main(request):
 
     content = {
         'title': title,
-        'products': products_list
+        'products': products_list,
+        'basket': get_basket(request.user)
     }
 
     return render(request, 'mainapp/index.html', content)
+
+
+def get_basket(user):
+    if user.is_authenticated:
+        return Basket.objects.filter(user=user)
+    else:
+        return []
+
+
+def get_hot_product():
+    products = Product.objects.all()
+
+    return random.sample(list(products), 1)[0]
+
+
+def get_same_products(hot_product):
+    same_products = Product.objects.filter(category=hot_product.category).\
+        exclude(pk=hot_product.pk)[:3]
+
+    return same_products
 
 
 def products(request, pk=None):
@@ -49,10 +71,13 @@ def products(request, pk=None):
             'basket': basket
         }
         return render(request, 'mainapp/products_list.html', content)
-    same_products = Product.objects.all()[3:5]
+
+    hot_product = get_hot_product()
+    same_products = get_same_products(hot_product)
     content = {
         'title': title,
         'links_menu': links_menu,
+        'hot_product': hot_product,
         'same_products': same_products,
         'basket': basket
     }
@@ -66,5 +91,31 @@ def contacts(request):
     location = None
     with open(os.path.join(BASE_DIR, 'mainapp/json/contact__locations.json')) as f:
         location = json.load(f)
-    content = {'title': title, 'visit_date': visit_date, 'location': location}
+    content = {
+        'title': title,
+        'visit_date': visit_date,
+        'location': location,
+        'basket': get_basket(request.user),
+    }
     return render(request, 'mainapp/contact.html', content)
+
+
+def not_found(request, exceptiion):
+    content = {
+        'product': Product.object.all()[:3]
+    }
+    return render(request, '', content)
+
+
+def product(request, pk):
+    product_item = get_object_or_404(Product, pk=pk)
+
+    content = {
+        'title': product_item.name,
+        'links_menu': ProductCategory.objects.all(),
+        'product': product_item,
+        'basket': get_basket(request.user),
+        'same_products': get_same_products(product_item),
+    }
+
+    return render(request, 'mainapp/product.html', content)

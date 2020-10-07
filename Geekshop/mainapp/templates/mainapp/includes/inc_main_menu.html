@@ -36,16 +36,12 @@
         {% endif %}
 
 </ul>
-<li>
-
-        <a href="{% url 'basket:basket' %}" class="basket"> {% if request.resolver_match.url_name == 'basket' %}
-                class="active"
-                {% endif %}>
-
-                {% if basket %}
-                {{ basket|length }}
-                {% endif %}
-
-        </a>
-</li>
 <a href="#" class="search"></a>
+<a href="{% url 'basket:basket' %}" class="basket">
+        <span>
+                {% if basket %}
+                {{ basket.0.total_cost|floatformat:0 }} руб
+                ({{ basket.0.total_quantity }} шт)
+                {% endif %}
+        </span>
+</a>
