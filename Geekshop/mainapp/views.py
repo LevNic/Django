@@ -1,4 +1,5 @@
 import os
+
 import json
 import random
 
@@ -53,7 +54,9 @@ def products(request, pk=None):
 
     title = 'продукты'
     links_menu = ProductCategory.objects.all()
-    basket = Basket.objects.filter(user=request.user)
+    basket = []
+    if request.user.is_authenticated:
+        basket = Basket.objects.filter(user=request.user)
 
     if pk is not None:
         if pk == 0:
