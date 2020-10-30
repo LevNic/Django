@@ -1,9 +1,11 @@
 from collections import OrderedDict
 from datetime import datetime
 from urllib.parse import urlencode, urlunparse
+from urllib.request import urlretrieve
 
 import requests
 from django.utils import timezone
+from django.conf import settings
 from social_core.exceptions import AuthForbidden
 
 from authapp.models import ShopUserProfile
@@ -17,7 +19,7 @@ def save_user_profile(backend, user, response, *args, **kwargs):
                           'api.vk.com',
                           '/method/users.get',
                           None,
-                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about')),
+                          urlencode(OrderedDict(fields=','.join(('bdate', 'sex', 'about', 'photo_max_orig')),
                                                 access_token=response['access_token'],
                                                 v='5.92')),
                           None
@@ -28,6 +30,12 @@ def save_user_profile(backend, user, response, *args, **kwargs):
         return
 
     data = resp.json()['response'][0]
+
+    if data['photo_max_orig']:
+        urlretrieve(data['photo_max_orig'],
+                    f'{settings.MEDIA_ROOT}/users_avatars/{user.pk}.jpeg')
+        user.avatar = f'{'users_avatars/{user.pk}.jpeg'
+
     if data['sex']:
         user.shopuserprofile.gender = ShopUserProfile.MALE if data[
             'sex'] == 2 else ShopUserProfile.FEMALE
