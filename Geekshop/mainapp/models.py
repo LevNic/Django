@@ -26,5 +26,10 @@ class Product(models.Model):
     quantity = models.PositiveSmallIntegerField(default=0)
     is_active = models.BooleanField(verbose_name='активен', default=True)
 
+    @staticmethod
+    def get_items():
+        return Product.objects.filter(is_active=True).\
+            order_by('category', 'name')
+
     def __str__(self):
         return f'{self.name} {self.category.name}'
