@@ -25,8 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'd)t$2tqx1n_e2_517j#26=^f6p5yeps#2312tb36*zu%vm0s9^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-DEBUG = False
+DEBUG = True
+#DEBUG = False
 
 # IP-адрес 194.67.111.29
 # Логин: root
@@ -91,21 +91,31 @@ AUTH_USER_MODEL = 'authapp.ShopUser'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'geekshop',
-        'USER': 'postgres',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'geekshop',
+    #     'USER': 'postgres',
+    #     'HOST': 'localhost',
+    #     'PORT': 5432,
+    # }
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
     #     'NAME': 'geekshop',
     #     'USER': 'django',
     #     'PASSWORD': 'geekbrains',
     # }
+    # 'default': {
+    #     'NAME': 'geekshop',
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'USER': 'django',
+    #     'PASSWORD': 'geekbrains',
+    #     'HOST': 'localhost'
+    # }
+
 }
 
 
